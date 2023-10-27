@@ -46,9 +46,6 @@ const cadastrarTransacao = async (req, res) => {
         console.log(error)
         return res.status(500).json('Erro interno do servidor')
     }
-
-    // Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra entrada ou saida, exatamente como descrito.
-
 }
 
 
@@ -70,16 +67,24 @@ const listarTransacoes = async (req, res) => {
 const detalharTransacao = async (req, res) => {
 
     const { authorization } = req.headers
-    const { id } = req.query
+    const { id } = req.params
+
+    const transacaoExiste = await pool.query('select * from transacoes where id = $1', [id]);
+
+    if (transacaoExiste.rowCount == 0) {
+        return res.status(400).json({ mensagem: 'Transacao inexistente!' })
+    }
 
     try {
+        const { id } = req.usuario
+
         const resultado = await pool.query('select * from transacoes where id = $1', [id]);
         return res.json(resultado)
+
     } catch (error) {
         console.log(error.message)
     }
 
-    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado
 }
 
 const atualizarTransacao = async (req, res) => {
