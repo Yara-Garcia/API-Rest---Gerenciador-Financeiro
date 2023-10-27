@@ -1,47 +1,12 @@
 const pool = require('../conexao');
-const jwt = require('jsonwebtoken')
-const senhaJwt = require('../senhaJwt')
-
-const listarTransacoes = async (req, res) => {
-    const { authorization } = req.headers
-
-    if (!authorization) {
-        return res.status(401).json({ mensagem: 'Não autorizado' })
-    }
-
-    const token = authorization.split('')[1]
-
-    try {
-        const tokenUsuario = jwt.verify(token, senhaJwt)
-        const { rows } = await pool.query('select * from transacoes')
-        return res.json(rows)
-    } catch (error) {
-        return res.status(500).json('Erro interno do servidor')
-    }
-    // O usuário deverá ser identificado através do ID presente no token de validação
-    // O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
-
-}
-
-const detalharTransacao = async (req, res) => {
-
-    const { authorization } = req.headers
-    const { id } = req.query
-
-    try {
-        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
-        return res.json(resultado)
-    } catch (error) {
-        console.log(error.message)
-    }
-
-    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado
-
-}
 
 const cadastrarTransacao = async (req, res) => {
-    const { id } = req.query
-    const { descricao, valor, data, categoria_id, tipo } = req.body
+    const { tipo, descricao, valor, data, categoria_id } = req.body
+    const { authorization } = req.headers
+
+    if (!tipo) {
+        return res.status(404).json({ mensagem: 'O campo tipo é obrigatório' })
+    }
 
     if (!descricao) {
         return res.status(404).json({ mensagem: 'A descrição é obrigatória' })
@@ -59,15 +24,62 @@ const cadastrarTransacao = async (req, res) => {
         return res.status(404).json({ mensagem: 'A categoria é obrigatória' })
     }
 
-    if (!tipo) {
-        return res.status(404).json({ mensagem: 'O campo tipo é obrigatório' })
+    const categoriaExiste = await pool.query('select * from categorias where id = $1', [categoria_id]);
+
+    if (categoriaExiste.rowCount == 0) {
+        return res.status(400).json({ mensagem: 'Categoria inexistente!' })
     }
 
-    // Validar se existe categoria para o id enviado no corpo (body) da requisição.
+    if (tipo != "entrada" || "saida") {
+        return res.status(400).json({ mensagem: 'O tipo da categoria deve ser igual a entrada ou saida.' })
+    }
+
+    try {
+        const { id } = req.usuario
+
+        const { rows } = await pool.query(`insert into transacoes
+        (tipo, descricao, valor, data, categoria_id, usuario_id )
+        values ($1, $2, $3, $4, $5, $6) returning *`, [tipo, descricao, valor, data, categoria_id, id])
+        return res.json(rows)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json('Erro interno do servidor')
+    }
+
     // Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra entrada ou saida, exatamente como descrito.
-    // Cadastrar a transação associada ao usuário logado.
+
+}
 
 
+const listarTransacoes = async (req, res) => {
+    const { authorization } = req.headers
+
+    try {
+        const { id } = req.usuario
+
+        const { rows } = await pool.query('select * from transacoes where usuario_id = $1', [id])
+        return res.json(rows)
+
+    } catch (error) {
+        return res.status(500).json('Erro interno do servidor')
+    }
+
+}
+
+const detalharTransacao = async (req, res) => {
+
+    const { authorization } = req.headers
+    const { id } = req.query
+
+    try {
+        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
+        return res.json(resultado)
+    } catch (error) {
+        console.log(error.message)
+    }
+
+    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado
 }
 
 const atualizarTransacao = async (req, res) => {

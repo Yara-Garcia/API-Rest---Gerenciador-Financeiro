@@ -30,11 +30,8 @@ const cadastrarUsuario = async (req, res) => {
         const novoUsuario = await pool.query(`insert into usuarios (nome, email, senha) 
         values ($1, $2, $3) returning *`, [nome, email, senhaCriptografada]);
 
-        // const { senha: _, ...usuario } = novoUsuario.rows[0]
-        // return res.status(201).json(usuario)
-
-        const { senha: _, ...usuarioLogado } = usuario.rows[0]
-        return res.json({ usuario: usuarioLogado, token })
+        const { senha: _, ...usuario } = novoUsuario.rows[0]
+        return res.status(201).json(usuario)
 
     } catch (error) {
         console.log(error.message)
