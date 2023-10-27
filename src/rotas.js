@@ -1,6 +1,7 @@
 const express = require('express');
 const verificarUsuarioLogado = require('./intermediarios/autenticacao');
 const { cadastrarUsuario, fazerLogin } = require('./controladores/usuarios');
+const transacoes = require('./controladores/transacoes')
 const rotas = express();
 
 rotas.post('/usuario', cadastrarUsuario);

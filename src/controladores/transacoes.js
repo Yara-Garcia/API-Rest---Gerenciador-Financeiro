@@ -1,13 +1,22 @@
 const pool = require('../conexao');
+const jwt = require('jsonwebtoken')
+const senhaJwt = require('../senhaJwt')
 
 const listarTransacoes = async (req, res) => {
     const { authorization } = req.headers
 
+    if (!authorization) {
+        return res.status(401).json({ mensagem: 'Não autorizado' })
+    }
+
+    const token = authorization.split('')[1]
+
     try {
-        const resultado = await pool.query('select * from transacoes')
-        return res.json(resultado)
+        const tokenUsuario = jwt.verify(token, senhaJwt)
+        const { rows } = await pool.query('select * from transacoes')
+        return res.json(rows)
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json('Erro interno do servidor')
     }
     // O usuário deverá ser identificado através do ID presente no token de validação
     // O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
