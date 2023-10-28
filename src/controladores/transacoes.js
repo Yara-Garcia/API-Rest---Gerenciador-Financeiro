@@ -1,5 +1,6 @@
 const pool = require('../conexao');
 
+
 const cadastrarTransacao = async (req, res) => {
     const { tipo, descricao, valor, data, categoria_id } = req.body
     const { authorization } = req.headers
@@ -64,31 +65,38 @@ const listarTransacoes = async (req, res) => {
 
 }
 
+
 const detalharTransacao = async (req, res) => {
 
     const { authorization } = req.headers
     const { id } = req.params
 
-    const transacaoExiste = await pool.query('select * from transacoes where id = $1', [id]);
-
-    if (transacaoExiste.rowCount == 0) {
-        return res.status(400).json({ mensagem: 'Transacao inexistente!' })
-    }
-
     try {
-        const { id } = req.usuario
+        const id_usuario = req.usuario.id
 
-        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
-        return res.json(resultado)
+        const transacaoExiste = await pool.query(`select * from transacoes
+        where id = $1 and usuario_id = $2`, [id, id_usuario]);
+
+        if (transacaoExiste.rowCount == 0) {
+            return res.status(400).json({ mensagem: 'Transacao inexistente!' })
+        }
+
+        return res.json(transacaoExiste.rows)
 
     } catch (error) {
         console.log(error.message)
     }
 
+    // não pertence ao usuario
+    // id não encontrado
+
 }
+
 
 const atualizarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body
+    const { authorization } = req.headers
+    const { id } = req.params
 
     if (!descricao) {
         return res.status(404).json({ mensagem: 'A descrição é obrigatória' })
@@ -110,23 +118,32 @@ const atualizarTransacao = async (req, res) => {
         return res.status(404).json({ mensagem: 'O campo tipo é obrigatório' })
     }
 
-    // Validar se existe categoria para o id enviado no corpo (body) da requisição.
+    const categoriaExiste = await pool.query('select * from categorias where id = $1', [categoria_id]);
 
-    const categoriaExiste = await pool.query('select * from usuarios where email = $1', [email]);
-
-    if (categoriaExiste.rowCount > 0) {
-        return res.status(400).json({ mensagem: 'Email já cadastrado. Por favor, tente novamente!' })
+    if (categoriaExiste.rowCount == 0) {
+        return res.status(400).json({ mensagem: 'Categoria inexistente!' })
     }
 
+    if (tipo != "entrada" && tipo != "saida") {
+        return res.status(400).json({ mensagem: 'O tipo da categoria deve ser igual a entrada ou saida.' })
+    }
+
+
     try {
-        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
-        return res.json(resultado)
+        const resultado = await pool.query(`update transacoes
+        set
+        descricao = $1,
+        valor = $2,
+        data = $3,
+        categoria_id = $4,
+        tipo = $5
+        where id = $6`, [descricao, valor, data, categoria_id, tipo, id]);
+
+        return res.json()
+
     } catch (error) {
         console.log(error.message)
     }
-
-    // Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra entrada ou saida, exatamente como descrito.
-    // Atualizar a transação no banco de dados
 
 }
 
