@@ -67,14 +67,14 @@ const fazerLogin = async (req, res) => {
 
         const token = jwt.sign({ id: rows[0].id }, senhaJwt, { expiresIn: '8h' })
 
-        const { senha, ...usuarioLogado } = rows[0];
+        const { senha: _, ...usuarioLogado } = rows[0];
 
-        return res.status(200).json(usuarioLogado, token)
+        return res.status(200).json({ usuarioLogado, token })
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
-
 }
 
 module.exports = {
