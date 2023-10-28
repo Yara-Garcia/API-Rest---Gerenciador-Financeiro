@@ -10,11 +10,12 @@ rotas.use(verificarUsuarioLogado);
 
 
 rotas.get('/transacao', transacoes.listarTransacoes);
+rotas.get('/transacao/extrato', transacoes.obterExtrato);
 rotas.get('/transacao/:id', transacoes.detalharTransacao);
 rotas.post('/transacao', transacoes.cadastrarTransacao);
 rotas.put('/transacao/:id', transacoes.atualizarTransacao);
 rotas.delete('/transacao/:id', transacoes.excluirTransacao);
-rotas.get('/transacao/extrato', transacoes.obterExtrato);
+
 
 
 module.exports = rotas;
