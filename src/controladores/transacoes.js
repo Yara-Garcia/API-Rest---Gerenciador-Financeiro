@@ -148,17 +148,25 @@ const atualizarTransacao = async (req, res) => {
 }
 
 const excluirTransacao = async (req, res) => {
-    const { id } = req.query
-    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado.
+    const { id } = req.params
+
     try {
+        const id_usuario = req.usuario.id
+
+        const transacaoExiste = await pool.query(`select * from transacoes
+        where id = $1 and usuario_id = $2`, [id, id_usuario]);
+
+        if (transacaoExiste.rowCount == 0) {
+            return res.status(400).json({ mensagem: 'Transacao inexistente!' })
+        }
+
         const resultado = await pool.query('delete from transacoes where id = $1', [id])
-        return res.json(resultado)
+
+        return res.json()
+
     } catch (error) {
         console.log(error.message)
     }
-
-    //Excluir a transação no banco de dados.
-
 }
 
 const obterExtrato = async (req, res) => {
