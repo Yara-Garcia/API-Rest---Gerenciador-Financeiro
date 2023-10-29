@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const senhaJwt = require('../senhaJwt')
+const pool = require('../conexao')
 
 const verificarUsuarioLogado = async (req, resp, next) => {
     const { authorization } = req.headers;
@@ -16,7 +17,7 @@ const verificarUsuarioLogado = async (req, resp, next) => {
         const { rows, rowCount } = await pool.query('select * from usuarios where id = $1', [id])
 
         if (rowCount < 1) {
-            return resp.status(401).json({ mensagem: 'Não autorizado' })
+            return resp.status(401).json({ mensagem: 'Não autorizado.' })
         }
 
         req.usuario = rows[0];
@@ -25,7 +26,7 @@ const verificarUsuarioLogado = async (req, resp, next) => {
 
     } catch (error) {
         console.log(error.message)
-        return resp.status(401).json({ mensagem: 'Não autorizado' })
+        return resp.status(401).json({ mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado.' })
     }
 }
 

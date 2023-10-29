@@ -77,7 +77,26 @@ const fazerLogin = async (req, res) => {
     }
 }
 
+const detalharUsuario = async (req, res) => {
+    try {
+
+        const { rowCount, rows } = await pool.query('select * from usuarios where id = $1', [req.usuario.id])
+
+        if (rowCount < 1) {
+            return res.status(404).json({ mensagem: 'Usuário não encontrado.' })
+        }
+
+        const { senha: _, ...usuario } = rows[0]
+
+        return res.status(200).json(usuario)
+
+    } catch (error) {
+        return res.status(500).json({ mensagem: 'Erro interno no servidor' })
+    }
+}
+
 module.exports = {
     cadastrarUsuario,
-    fazerLogin
+    fazerLogin,
+    detalharUsuario
 }

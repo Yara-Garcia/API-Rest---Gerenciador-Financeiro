@@ -1,11 +1,12 @@
 const express = require('express');
 const verificarUsuarioLogado = require('./intermediarios/autenticacao');
-const { cadastrarUsuario, fazerLogin } = require('./controladores/usuarios');
+const { cadastrarUsuario, fazerLogin, detalharUsuario } = require('./controladores/usuarios');
 const rotas = express();
 
 rotas.post('/usuario', cadastrarUsuario);
 rotas.post('/login', fazerLogin);
 rotas.use(verificarUsuarioLogado);
+rotas.get('/usuario', detalharUsuario)
 
 
 /*rotas.get('/transacao', transacoes.listarTransacoes);
