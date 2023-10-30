@@ -95,8 +95,47 @@ const detalharUsuario = async (req, res) => {
     }
 }
 
+const atualizarUsuario = async (req, res) => {
+    const { nome, email, senha } = req.body;
+
+    if (!nome) {
+        return res.status(400).json({ mensagem: 'O campo nome é obrigatório' })
+    }
+
+    if (!email) {
+        return res.status(400).json({ mensagem: 'O campo email é obrigatório' })
+    }
+
+    if (!senha) {
+        return res.status(400).json({ mensagem: 'O campo senha é obrigatório' })
+    }
+
+    const { rowCount } = await pool.query('select * from usuarios where email = $1 and id != $2', [email, req.usuario.id]);
+
+    if (rowCount > 0) {
+        return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
+    }
+
+    try {
+        const senhaCriptografada = await hash(senha, 10);
+
+        const atualizacaoUsuario = await pool.query(`update usuarios 
+        set nome = $1, 
+        email = $2,
+        senha = $3
+        where id = $4 returning *`, [nome, email, senhaCriptografada, req.usuario.id]);
+
+        return res.status(200).json()
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+    }
+
+}
+
 module.exports = {
     cadastrarUsuario,
     fazerLogin,
-    detalharUsuario
+    detalharUsuario,
+    atualizarUsuario
 }
