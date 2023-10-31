@@ -67,9 +67,9 @@ const fazerLogin = async (req, res) => {
 
         const token = jwt.sign({ id: rows[0].id }, senhaJwt, { expiresIn: '8h' })
 
-        const { senha: _, ...usuarioLogado } = rows[0];
+        const { senha: _, ...usuario } = rows[0];
 
-        return res.status(200).json({ usuarioLogado, token })
+        return res.status(200).json({ usuario, token })
 
     } catch (error) {
         console.log(error.message)

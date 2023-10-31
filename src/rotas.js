@@ -1,4 +1,5 @@
 const express = require('express');
+const rotas = express();
 
 const verificarUsuarioLogado = require('./intermediarios/autenticacao');
 
@@ -8,6 +9,8 @@ const {
     detalharUsuario,
     atualizarUsuario
 } = require('./controladores/usuarios');
+
+const listarCategorias = require('./controladores/categorias');
 
 const {
     cadastrarTransacao,
@@ -26,15 +29,15 @@ const {
     verificarVinculoDaTransacaoComUsuario
 } = require('./intermediarios/verificadoresTransacoes');
 
-const rotas = express();
-
 
 rotas.post('/usuario', cadastrarUsuario);
-
 rotas.post('/login', fazerLogin);
+
 rotas.use(verificarUsuarioLogado);
+
 rotas.get('/usuario', detalharUsuario);
 rotas.put('/usuario', atualizarUsuario)
+
 rotas.get('/categoria', listarCategorias);
 
 rotas.post('/transacao',
