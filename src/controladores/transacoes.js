@@ -4,14 +4,24 @@ const listarTransacoes = async (req, res) => {
     const { authorization } = req.headers
 
     try {
-        const resultado = await pool.query('select * from transacoes')
-        return res.json(resultado)
+        const { id } = req.usuario
+
+        const { rows, rowCount } = await pool.query('select * from transacoes where usuario_id = $1', [id])
+
+        if (rowCount < 1) {
+            return res.status(404).json({ mensagem: 'Não foi encontrada nenhuma transação' })
+        }
+
+        return res.json(rows)
+
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json('Erro interno do servidor')
     }
+
     // O usuário deverá ser identificado através do ID presente no token de validação
     // O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
 
+    //mensagem para caso nao encontre nenhuma transacao
 }
 
 const detalharTransacao = async (req, res) => {
