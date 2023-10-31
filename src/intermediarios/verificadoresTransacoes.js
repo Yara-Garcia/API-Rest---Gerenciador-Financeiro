@@ -14,7 +14,7 @@ const verificarExistenciaDeCategoria = async (req, res, next) => {
     const categoriaExiste = await pool.query('select * from categorias where id = $1', [categoria_id]);
 
     if (categoriaExiste.rowCount == 0) {
-        return res.status(400).json({ mensagem: 'Categoria inexistente!' })
+        return res.status(404).json({ mensagem: 'Categoria inexistente!' })
     }
     next()
 }
@@ -32,7 +32,7 @@ const verificarExistenciaDeTransacao = async (req, res, next) => {
     const idTransacaoExiste = await pool.query(`select * from transacoes where id = $1`, [id]);
 
     if (idTransacaoExiste.rowCount == 0) {
-        return res.status(400).json({ mensagem: 'Id transação inexistente!' })
+        return res.status(404).json({ mensagem: 'Id transação inexistente!' })
     }
     next()
 }
@@ -45,7 +45,7 @@ const verificarVinculoDaTransacaoComUsuario = async (req, res, next) => {
     usuario_id = $1 and id = $2`, [id_usuario, id])
 
     if (transacaoPertenceAoUsuario.rowCount == 0) {
-        return res.status(400).json({ mensagem: 'Transacao inexistente para este usuário!' })
+        return res.status(403).json({ mensagem: 'Transacao inexistente para este usuário!' })
     }
     next()
 }

@@ -22,7 +22,6 @@ const cadastrarTransacao = async (req, res) => {
     }
 }
 
-
 const listarTransacoes = async (req, res) => {
     const { authorization } = req.headers
 
@@ -37,7 +36,6 @@ const listarTransacoes = async (req, res) => {
     }
 
 }
-
 
 const detalharTransacao = async (req, res) => {
 
@@ -58,9 +56,7 @@ const detalharTransacao = async (req, res) => {
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
     }
-
 }
-
 
 const obterExtrato = async (req, res) => {
     const { authorization } = req.headers
@@ -76,13 +72,12 @@ const obterExtrato = async (req, res) => {
 
         const resultado = [entrada.rows[0], saida.rows[0]]
         // não consegui transformar em um único objeto
-        return res.json(resultado)
+        return res.status(200).json(resultado)
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
     }
 }
-
 
 const atualizarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body
@@ -99,14 +94,12 @@ const atualizarTransacao = async (req, res) => {
         tipo = $5
         where id = $6`, [descricao, valor, data, categoria_id, tipo, id]);
 
-        return res.status(201).json()
+        return res.status(204).json()
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
     }
-
 }
-
 
 const excluirTransacao = async (req, res) => {
     const { id } = req.params
@@ -123,20 +116,13 @@ const excluirTransacao = async (req, res) => {
 
         const resultado = await pool.query('delete from transacoes where id = $1', [id])
 
-        return res.status(200).json()
+        return res.status(204).json()
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
     }
 }
 
-// 200 (OK) = requisição bem sucedida
-// 201 (Created) = requisição bem sucedida e algo foi criado
-// 204 (No Content) = requisição bem sucedida, sem conteúdo no corpo da resposta
-// 400 (Bad Request) = o servidor não entendeu a requisição pois está com uma sintaxe/formato inválido
-// 401 (Unauthorized) = o usuário não está autenticado (logado)
-// 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
-// 404 (Not Found) = o servidor não pode encontrar o recurso solicitado
 
 module.exports = {
     cadastrarTransacao,
