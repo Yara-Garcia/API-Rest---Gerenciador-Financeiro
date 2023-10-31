@@ -31,8 +31,8 @@ const cadastrarUsuario = async (req, res) => {
         values ($1, $2, $3) returning *`, [nome, email, senhaCriptografada]);
 
         const { senha: _, ...usuario } = novoUsuario.rows[0]
-
         return res.status(201).json(usuario)
+
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno do servidor' })
@@ -67,11 +67,12 @@ const fazerLogin = async (req, res) => {
 
         const token = jwt.sign({ id: rows[0].id }, senhaJwt, { expiresIn: '8h' })
 
-        const { senha, ...usuarioLogado } = rows[0];
+        const { senha: _, ...usuarioLogado } = rows[0]; //precisei colocar senha: _   pq só senha nao rodou, aparecia o erro que a senha precisava ser inicializada
 
-        return res.status(200).json(usuarioLogado, token)
+        return res.status(200).json({ usuarioLogado, token })   //aqui eu tinha esquecido de colocar usuariologado e token dentro do objeto
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 
