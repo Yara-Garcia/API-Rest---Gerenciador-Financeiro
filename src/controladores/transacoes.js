@@ -70,7 +70,12 @@ const obterExtrato = async (req, res) => {
         const saida = await pool.query(`select sum(valor) as saida from transacoes
         where usuario_id = $1 and tipo like 'saida'`, [id_usuario]);
 
-        const resultado = [entrada.rows[0], saida.rows[0]]
+        const resultadoEntrada = entrada.rows[0]
+        const resultadoSaida = saida.rows[0]
+        const resultado = {
+            resultadoEntrada,
+            resultadoSaida
+        }
         // não consegui transformar em um único objeto
         return res.status(200).json(resultado)
 
