@@ -31,8 +31,8 @@ const cadastrarUsuario = async (req, res) => {
         values ($1, $2, $3) returning *`, [nome, email, senhaCriptografada]);
 
         const { senha: _, ...usuario } = novoUsuario.rows[0]
-
         return res.status(201).json(usuario)
+
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno do servidor' })
@@ -91,6 +91,7 @@ const detalharUsuario = async (req, res) => {
         return res.status(200).json(usuario)
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno no servidor' })
     }
 }

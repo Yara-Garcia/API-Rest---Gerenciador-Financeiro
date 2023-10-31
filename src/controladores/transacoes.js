@@ -1,11 +1,34 @@
 const pool = require('../conexao');
 
+
+const cadastrarTransacao = async (req, res) => {
+    const { tipo, descricao, valor, data, categoria_id } = req.body
+    const { authorization } = req.headers
+
+    try {
+        const { id } = req.usuario
+
+        const { rows } = await pool.query(`insert into transacoes
+        (tipo, descricao, valor, data, categoria_id, usuario_id )
+        values ($1, $2, $3, $4, $5, $6) returning *`, [tipo, descricao, valor, data, categoria_id, id])
+
+        return res.status(201).json(rows)
+
+        // faltou inserir a  "categoria_nome": "Salários" na resposta
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json('Erro interno do servidor')
+    }
+}
+
 const listarTransacoes = async (req, res) => {
     const { authorization } = req.headers
 
     try {
         const { id } = req.usuario
 
+<<<<<<< HEAD
         const { rows, rowCount } = await pool.query('select * from transacoes where usuario_id = $1', [id])
 
         if (rowCount < 1) {
@@ -13,13 +36,20 @@ const listarTransacoes = async (req, res) => {
         }
 
         return res.json(rows)
+=======
+        const { rows } = await pool.query('select * from transacoes where usuario_id = $1', [id])
+        return res.status(200).json(rows)
+>>>>>>> c645eea15a416e2e80867c526ba756c30a1064eb
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
     }
+<<<<<<< HEAD
 
     // O usuário deverá ser identificado através do ID presente no token de validação
     // O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
+=======
+>>>>>>> c645eea15a416e2e80867c526ba756c30a1064eb
 
     //mensagem para caso nao encontre nenhuma transacao
 }
@@ -27,120 +57,100 @@ const listarTransacoes = async (req, res) => {
 const detalharTransacao = async (req, res) => {
 
     const { authorization } = req.headers
-    const { id } = req.query
+    const { id } = req.params
 
     try {
-        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
-        return res.json(resultado)
+        const id_usuario = req.usuario.id
+
+        const transacaoExiste = await pool.query(`select * from transacoes
+        where id = $1 and usuario_id = $2`, [id, id_usuario]);
+
+        console.log(transacaoExiste)
+        return res.status(200).json(transacaoExiste.rows)
+
+        // faltou inserir a  "categoria_nome": "Salários" na resposta
+
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json('Erro interno do servidor')
     }
-
-    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado
-
 }
 
-const cadastrarTransacao = async (req, res) => {
-    const { id } = req.query
-    const { descricao, valor, data, categoria_id, tipo } = req.body
+const obterExtrato = async (req, res) => {
+    const { authorization } = req.headers
 
-    if (!descricao) {
-        return res.status(404).json({ mensagem: 'A descrição é obrigatória' })
+    try {
+        const id_usuario = req.usuario.id
+
+        const entrada = await pool.query(`select sum(valor) as entrada from transacoes
+        where usuario_id = $1 and tipo like 'entrada'`, [id_usuario]);
+
+        const saida = await pool.query(`select sum(valor) as saida from transacoes
+        where usuario_id = $1 and tipo like 'saida'`, [id_usuario]);
+
+        const resultadoEntrada = entrada.rows[0]
+        const resultadoSaida = saida.rows[0]
+        const resultado = {
+            resultadoEntrada,
+            resultadoSaida
+        }
+        // não consegui transformar em um único objeto
+        return res.status(200).json(resultado)
+
+    } catch (error) {
+        return res.status(500).json('Erro interno do servidor')
     }
-
-    if (!valor) {
-        return res.status(404).json({ mensagem: 'O valor é obrigatório' })
-    }
-
-    if (!data) {
-        return res.status(404).json({ mensagem: 'A data é obrigatória' })
-    }
-
-    if (!categoria_id) {
-        return res.status(404).json({ mensagem: 'A categoria é obrigatória' })
-    }
-
-    if (!tipo) {
-        return res.status(404).json({ mensagem: 'O campo tipo é obrigatório' })
-    }
-
-    // Validar se existe categoria para o id enviado no corpo (body) da requisição.
-    // Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra entrada ou saida, exatamente como descrito.
-    // Cadastrar a transação associada ao usuário logado.
-
-
 }
 
 const atualizarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body
-
-    if (!descricao) {
-        return res.status(404).json({ mensagem: 'A descrição é obrigatória' })
-    }
-
-    if (!valor) {
-        return res.status(404).json({ mensagem: 'O valor é obrigatório' })
-    }
-
-    if (!data) {
-        return res.status(404).json({ mensagem: 'A data é obrigatória' })
-    }
-
-    if (!categoria_id) {
-        return res.status(404).json({ mensagem: 'A categoria é obrigatória' })
-    }
-
-    if (!tipo) {
-        return res.status(404).json({ mensagem: 'O campo tipo é obrigatório' })
-    }
-
-    // Validar se existe categoria para o id enviado no corpo (body) da requisição.
-
-    const categoriaExiste = await pool.query('select * from usuarios where email = $1', [email]);
-
-    if (categoriaExiste.rowCount > 0) {
-        return res.status(400).json({ mensagem: 'Email já cadastrado. Por favor, tente novamente!' })
-    }
+    const { authorization } = req.headers
+    const { id } = req.params
 
     try {
-        const resultado = await pool.query('select * from transacoes where id = $1', [id]);
-        return res.json(resultado)
+        const resultado = await pool.query(`update transacoes
+        set
+        descricao = $1,
+        valor = $2,
+        data = $3,
+        categoria_id = $4,
+        tipo = $5
+        where id = $6`, [descricao, valor, data, categoria_id, tipo, id]);
+
+        return res.status(204).json()
+
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json('Erro interno do servidor')
     }
-
-    // Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra entrada ou saida, exatamente como descrito.
-    // Atualizar a transação no banco de dados
-
 }
 
 const excluirTransacao = async (req, res) => {
-    const { id } = req.query
-    // Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado.
+    const { id } = req.params
+
     try {
+        const id_usuario = req.usuario.id
+
+        const transacaoExiste = await pool.query(`select * from transacoes
+        where id = $1 and usuario_id = $2`, [id, id_usuario]);
+
+        if (transacaoExiste.rowCount == 0) {
+            return res.status(400).json({ mensagem: 'Transacao inexistente!' })
+        }
+
         const resultado = await pool.query('delete from transacoes where id = $1', [id])
-        return res.json(resultado)
+
+        return res.status(204).json()
+
     } catch (error) {
-        console.log(error.message)
+        return res.status(500).json('Erro interno do servidor')
     }
-
-    //Excluir a transação no banco de dados.
-
 }
 
-const obterExtrato = async (req, res) => {
-    // Em caso de não existir transações do tipo entrada cadastradas para o usuário logado, o valor retornado no corpo (body) da resposta deverá ser 0.
-    // Em caso de não existir transações do tipo saida cadastradas para o usuário logado, o valor retornado no corpo (body) da resposta deverá ser 0.
-
-    // A criação desta rota, no arquivo rotas.js, deverá acontecer antes da criação da rota de detalhamento de uma transação (GET /transacao/:id), caso contrário, esta rota nunca será possível ser acessada.
-
-}
 
 module.exports = {
+    cadastrarTransacao,
     listarTransacoes,
     detalharTransacao,
-    cadastrarTransacao,
+    obterExtrato,
     atualizarTransacao,
-    excluirTransacao,
-    obterExtrato
+    excluirTransacao
 }
