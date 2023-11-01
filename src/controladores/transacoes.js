@@ -8,20 +8,20 @@ const cadastrarTransacao = async (req, res) => {
 
         const cadastroTransacao = await pool.query(`insert into transacoes
         (tipo, descricao, valor, data, usuario_id, categoria_id )
-        values ($1, $2, $3, $4, $5, $6) returning id`, [tipo, descricao, valor, data, id, categoria_id])
-        //ta dando erro aqui
+        values ($1, $2, $3, $4, $5, $6) returning *`, [tipo, descricao, valor, data, id, categoria_id])
 
         const idTransacaoCriada = cadastroTransacao.rows[0].id
 
         const { rows } = await pool.query(
             `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
         c.descricao as categoria_nome
-        from transacoes t join categorias c on t.usuario_id = $1 and t.id = $2`, [id, idTransacaoCriada])
+        from transacoes t join categorias c ON t.categoria_id = c.id
+        WHERE t.usuario_id = $1 AND t.id = $2`, [id, idTransacaoCriada])
 
         return res.status(201).json(rows)
 
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
         return res.status(500).json('Erro interno do servidor')
     }
 }
@@ -33,39 +33,31 @@ const listarTransacoes = async (req, res) => {
         const { rows } = await pool.query(
             `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
         c.descricao as categoria_nome
-        from transacoes t join categorias c on t.usuario_id = $1 and c.descricao = $2`, [id, descricao])
-
-        if (rowCount < 1) {
-            return res.status(404).json({ mensagem: 'Não foi encontrada nenhuma transação' })
-        }
+        from transacoes t join categorias c ON t.categoria_id = c.id
+        WHERE t.usuario_id = $1`, [id])
 
         return res.status(200).json(rows)
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json('Erro interno do servidor')
     }
-
-    // O usuário deverá ser identificado através do ID presente no token de validação
-    // O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
-
-    //mensagem para caso nao encontre nenhuma transacao
 }
 
 const detalharTransacao = async (req, res) => {
 
-    const { authorization } = req.headers
     const { id } = req.params
 
     try {
         const id_usuario = req.usuario.id
 
-        const transacaoExiste = await pool.query(`select * from transacoes
-        where id = $1 and usuario_id = $2`, [id, id_usuario]);
+        const { rows } = await pool.query(
+            `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
+        c.descricao as categoria_nome
+        from transacoes t join categorias c ON t.categoria_id = c.id
+        WHERE t.usuario_id = $1 and t.id = $2`, [id_usuario, id])
 
-        console.log(transacaoExiste)
-        return res.status(200).json(transacaoExiste.rows)
-
-        // faltou inserir a  "categoria_nome": "Salários" na resposta
+        return res.status(200).json(rows)
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
@@ -73,7 +65,6 @@ const detalharTransacao = async (req, res) => {
 }
 
 const obterExtrato = async (req, res) => {
-    const { authorization } = req.headers
 
     try {
         const id_usuario = req.usuario.id
@@ -90,7 +81,7 @@ const obterExtrato = async (req, res) => {
             resultadoEntrada,
             resultadoSaida
         }
-        // não consegui transformar em um único objeto
+
         return res.status(200).json(resultado)
 
     } catch (error) {
@@ -100,7 +91,6 @@ const obterExtrato = async (req, res) => {
 
 const atualizarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body
-    const { authorization } = req.headers
     const { id } = req.params
 
     try {

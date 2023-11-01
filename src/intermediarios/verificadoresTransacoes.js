@@ -21,21 +21,24 @@ const verificarExistenciaDeCategoria = async (req, res, next) => {
 
 const verificarEscritaDoCampoTipo = async (req, res, next) => {
     const { tipo } = req.body
-    if (tipo != "entrada" && tipo != "saida") {
+
+    const tipoMinusculo = tipo.toLowerCase()
+
+    if (tipoMinusculo !== "entrada" && tipoMinusculo !== "saida") {
         return res.status(400).json({ mensagem: 'O tipo da categoria deve ter escrita exatamente igual as palavras entrada ou saida.' })
     }
     next()
 }
 
 const verificarExistenciaDeTransacao = async (req, res, next) => {
-    const { id } = req.params
+    const id = req.params.id
     const idTransacaoExiste = await pool.query(`select * from transacoes where id = $1`, [id]);
 
     if (idTransacaoExiste.rowCount == 0) {
         return res.status(404).json({ mensagem: 'Id transação inexistente!' })
     }
     next()
-}
+}  //erro aqui parentemente
 
 const verificarVinculoDaTransacaoComUsuario = async (req, res, next) => {
     const id_usuario = req.usuario.id
