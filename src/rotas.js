@@ -10,6 +10,8 @@ const {
     atualizarUsuario
 } = require('./controladores/usuarios');
 
+const verificarCamposObrigatorios = require('./intermediarios/verificadoresUsuarios');
+
 const listarCategorias = require('./controladores/categorias');
 
 const {
@@ -29,14 +31,13 @@ const {
     verificarVinculoDaTransacaoComUsuario
 } = require('./intermediarios/verificadoresTransacoes');
 
-
-rotas.post('/usuario', cadastrarUsuario);
-rotas.post('/login', fazerLogin);
+rotas.post('/usuario', verificarCamposObrigatorios, cadastrarUsuario);
+rotas.post('/login', verificarCamposObrigatorios, fazerLogin);
 
 rotas.use(verificarUsuarioLogado);
 
 rotas.get('/usuario', detalharUsuario);
-rotas.put('/usuario', atualizarUsuario)
+rotas.put('/usuario', verificarCamposObrigatorios, atualizarUsuario)
 
 rotas.get('/categoria', listarCategorias);
 

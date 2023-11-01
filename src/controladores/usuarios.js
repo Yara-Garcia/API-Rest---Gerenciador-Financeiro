@@ -6,18 +6,6 @@ const senhaJwt = require('../senhaJwt')
 const cadastrarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body;
 
-    if (!nome) {
-        return res.status(400).json({ mensagem: 'O campo nome é obrigatório' })
-    }
-
-    if (!email) {
-        return res.status(400).json({ mensagem: 'O campo email é obrigatório' })
-    }
-
-    if (!senha) {
-        return res.status(400).json({ mensagem: 'O campo senha é obrigatório' })
-    }
-
     const emailExiste = await pool.query('select * from usuarios where email = $1', [email]);
 
     if (emailExiste.rowCount > 0) {
@@ -41,14 +29,6 @@ const cadastrarUsuario = async (req, res) => {
 
 const fazerLogin = async (req, res) => {
     const { email, senha } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ mensagem: 'O campo email é obrigatório' })
-    }
-
-    if (!senha) {
-        return res.status(400).json({ mensagem: 'O campo senha é obrigatório' })
-    }
 
     try {
         const { rows, rowCount } = await pool.query('select * from usuarios where email = $1', [email]);
@@ -99,18 +79,6 @@ const detalharUsuario = async (req, res) => {
 const atualizarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body;
 
-    if (!nome) {
-        return res.status(400).json({ mensagem: 'O campo nome é obrigatório' })
-    }
-
-    if (!email) {
-        return res.status(400).json({ mensagem: 'O campo email é obrigatório' })
-    }
-
-    if (!senha) {
-        return res.status(400).json({ mensagem: 'O campo senha é obrigatório' })
-    }
-
     const { rowCount } = await pool.query('select * from usuarios where email = $1 and id != $2', [email, req.usuario.id]);
 
     if (rowCount > 0) {
@@ -124,14 +92,13 @@ const atualizarUsuario = async (req, res) => {
         set nome = $1, 
         email = $2,
         senha = $3
-        where id = $4 returning *`, [nome, email, senhaCriptografada, req.usuario.id]);
+        where id = $4`, [nome, email, senhaCriptografada, req.usuario.id]);
 
-        return res.status(200).json()
+        return res.status(200).json(atualizacaoUsuario.rows[0])
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({ mensagem: 'Erro interno do servidor' })
     }
-
 }
 
 module.exports = {
