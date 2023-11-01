@@ -2,18 +2,23 @@ const pool = require('../conexao');
 
 const cadastrarTransacao = async (req, res) => {
     const { tipo, descricao, valor, data, categoria_id } = req.body
-    const { authorization } = req.headers
 
     try {
         const { id } = req.usuario
 
-        const { rows } = await pool.query(`insert into transacoes
-        (tipo, descricao, valor, data, categoria_id, usuario_id )
-        values ($1, $2, $3, $4, $5, $6) returning *`, [tipo, descricao, valor, data, categoria_id, id])
+        const cadastroTransacao = await pool.query(`insert into transacoes
+        (tipo, descricao, valor, data, usuario_id, categoria_id )
+        values ($1, $2, $3, $4, $5, $6) returning id`, [tipo, descricao, valor, data, id, categoria_id])
+        //ta dando erro aqui
+
+        const idTransacaoCriada = cadastroTransacao.rows[0].id
+
+        const { rows } = await pool.query(
+            `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
+        c.descricao as categoria_nome
+        from transacoes t join categorias c on t.usuario_id = $1 and t.id = $2`, [id, idTransacaoCriada])
 
         return res.status(201).json(rows)
-
-        // faltou inserir a  "categoria_nome": "Salários" na resposta
 
     } catch (error) {
         console.log(error)
@@ -22,12 +27,13 @@ const cadastrarTransacao = async (req, res) => {
 }
 
 const listarTransacoes = async (req, res) => {
-    const { authorization } = req.headers
-
     try {
         const { id } = req.usuario
 
-        const { rows, rowCount } = await pool.query('select * from transacoes where usuario_id = $1', [id])
+        const { rows } = await pool.query(
+            `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
+        c.descricao as categoria_nome
+        from transacoes t join categorias c on t.usuario_id = $1 and c.descricao = $2`, [id, descricao])
 
         if (rowCount < 1) {
             return res.status(404).json({ mensagem: 'Não foi encontrada nenhuma transação' })

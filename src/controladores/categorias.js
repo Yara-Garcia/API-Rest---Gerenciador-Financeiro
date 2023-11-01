@@ -2,11 +2,7 @@ const pool = require('../conexao');
 
 const listarCategorias = async (req, res) => {
     try {
-        const { rows, rowCount } = await pool.query('select * from categorias')
-
-        if (rowCount < 1) {
-            return res.status(404).json({ mensagem: 'Não há categorias cadastradas.' })
-        }
+        const { rows } = await pool.query('select * from categorias')
 
         return res.status(200).json(rows)
 
