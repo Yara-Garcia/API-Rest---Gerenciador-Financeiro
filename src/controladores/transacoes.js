@@ -69,17 +69,21 @@ const obterExtrato = async (req, res) => {
     try {
         const id_usuario = req.usuario.id
 
-        const entrada = await pool.query(`select sum(valor) as entrada from transacoes
-        where usuario_id = $1 and tipo like 'entrada'`, [id_usuario]);
+        const somaEntradas = await pool.query(`select sum(valor) as entradas from transacoes
+        where usuario_id = $1 and lower(tipo) like 'entrada'`, [id_usuario]);
 
-        const saida = await pool.query(`select sum(valor) as saida from transacoes
-        where usuario_id = $1 and tipo like 'saida'`, [id_usuario]);
+        const somaSaidas = await pool.query(`select sum(valor) as saidas from transacoes
+        where usuario_id = $1 and lower(tipo) like 'saida'`, [id_usuario]);
 
-        const resultadoEntrada = entrada.rows[0]
-        const resultadoSaida = saida.rows[0]
+        const resultadoEntrada = somaEntradas.rows[0]
+        const resultadoSaida = somaSaidas.rows[0]
+
+        const entradas = resultadoEntrada.entradas === null ? 0 : resultadoEntrada.entradas
+        const saidas = resultadoSaida.saidas === null ? 0 : resultadoSaida.saidas
+
         const resultado = {
-            resultadoEntrada,
-            resultadoSaida
+            entradas,
+            saidas
         }
 
         return res.status(200).json(resultado)

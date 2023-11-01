@@ -3,6 +3,13 @@ const rotas = express();
 const verificarUsuarioLogado = require('./intermediarios/autenticacao');
 const verificarCamposObrigatorios = require('./intermediarios/verificadoresUsuarios');
 const listarCategorias = require('./controladores/categorias');
+const {
+    verificarPreenchimentoDosCampos,
+    verificarExistenciaDeCategoria,
+    verificarEscritaDoCampoTipo,
+    verificarExistenciaDeTransacao,
+    verificarVinculoDaTransacaoComUsuario
+} = require('./intermediarios/verificadoresTransacoes');
 
 const {
     cadastrarUsuario,
@@ -14,19 +21,11 @@ const {
 const {
     cadastrarTransacao,
     listarTransacoes,
-    obterExtrato,
     detalharTransacao,
+    obterExtrato,
     atualizarTransacao,
     excluirTransacao
 } = require('./controladores/transacoes');
-
-const {
-    verificarPreenchimentoDosCampos,
-    verificarExistenciaDeCategoria,
-    verificarEscritaDoCampoTipo,
-    verificarExistenciaDeTransacao,
-    verificarVinculoDaTransacaoComUsuario
-} = require('./intermediarios/verificadoresTransacoes');
 
 rotas.post('/usuario',
     verificarCamposObrigatorios,
@@ -62,14 +61,14 @@ rotas.get('/transacao',
     listarTransacoes
 )
 
+rotas.get('/transacao/extrato',
+    obterExtrato
+);
+
 rotas.get('/transacao/:id',
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     detalharTransacao
-);
-
-rotas.get('/transacao/extrato',
-    obterExtrato
 );
 
 rotas.put('/transacao/:id',

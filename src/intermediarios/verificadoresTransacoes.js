@@ -38,7 +38,7 @@ const verificarExistenciaDeTransacao = async (req, res, next) => {
         return res.status(404).json({ mensagem: 'Id transação inexistente!' })
     }
     next()
-}  //erro aqui parentemente
+}
 
 const verificarVinculoDaTransacaoComUsuario = async (req, res, next) => {
     const id_usuario = req.usuario.id
