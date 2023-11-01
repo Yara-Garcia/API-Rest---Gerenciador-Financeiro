@@ -34,7 +34,7 @@ const fazerLogin = async (req, res) => {
         const { rows, rowCount } = await pool.query('select * from usuarios where email = $1', [email]);
 
         if (rowCount < 1) {
-            return res.status(404).json({ mensagem: 'Email não encontrado. Por favor, tente novamente!' })
+            return res.status(404).json({ mensagem: 'Email ou senha inválidos. Por favor, tente novamente!' })
         }
 
         const senhaCriptografada = rows[0].senha;
@@ -42,7 +42,7 @@ const fazerLogin = async (req, res) => {
         const senhaValida = await compare(senha, senhaCriptografada)
 
         if (!senhaValida) {
-            return res.status(400).json({ mensagem: 'Senha inválida. Por favor, tente novamente!' })
+            return res.status(400).json({ mensagem: 'Email ou senha inválidos. Por favor, tente novamente!' })
         }
 
         const token = jwt.sign({ id: rows[0].id }, senhaJwt, { expiresIn: '8h' })

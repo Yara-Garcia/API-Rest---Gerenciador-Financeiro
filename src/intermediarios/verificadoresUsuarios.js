@@ -1,4 +1,3 @@
-const pool = require('../conexao')
 
 const verificarCamposObrigatorios = async (req, res, next) => {
     if (req.url === '/usuario') {
