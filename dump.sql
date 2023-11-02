@@ -15,7 +15,7 @@ create table categorias (
 create table transacoes (
     id serial primary key,
     descricao text,
-    valor numeric(10, 2) not null,
+    valor numeric(10, 0) not null,
     data date not null,
     categoria_id integer not null references categorias(id),
     usuario_id integer not null references usuarios(id),

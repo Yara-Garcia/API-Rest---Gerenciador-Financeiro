@@ -1,21 +1,8 @@
 const express = require('express');
-
+const rotas = express();
 const verificarUsuarioLogado = require('./intermediarios/autenticacao');
-
-const {
-    cadastrarUsuario,
-    fazerLogin
-} = require('./controladores/usuarios');
-
-const {
-    cadastrarTransacao,
-    listarTransacoes,
-    obterExtrato,
-    detalharTransacao,
-    atualizarTransacao,
-    excluirTransacao
-} = require('./controladores/transacoes');
-
+const verificarCamposObrigatorios = require('./intermediarios/verificadoresUsuarios');
+const listarCategorias = require('./controladores/categorias');
 const {
     verificarPreenchimentoDosCampos,
     verificarExistenciaDeCategoria,
@@ -24,15 +11,46 @@ const {
     verificarVinculoDaTransacaoComUsuario
 } = require('./intermediarios/verificadoresTransacoes');
 
-const rotas = express();
+const {
+    cadastrarUsuario,
+    fazerLogin,
+    detalharUsuario,
+    atualizarUsuario
+} = require('./controladores/usuarios');
 
+const {
+    cadastrarTransacao,
+    listarTransacoes,
+    detalharTransacao,
+    obterExtrato,
+    atualizarTransacao,
+    excluirTransacao
+} = require('./controladores/transacoes');
 
-rotas.post('/usuario', cadastrarUsuario);
+rotas.post('/usuario',
+    verificarCamposObrigatorios,
+    cadastrarUsuario
+);
 
-rotas.post('/login', fazerLogin);
+rotas.post('/login',
+    verificarCamposObrigatorios,
+    fazerLogin
+);
+
+rotas.use(verificarUsuarioLogado);
+
+rotas.get('/usuario',
+    detalharUsuario
+)
+
+rotas.put('/usuario',
+    verificarCamposObrigatorios,
+    atualizarUsuario
+)
+
+rotas.get('/categoria', listarCategorias);
 
 rotas.post('/transacao',
-    verificarUsuarioLogado,
     verificarPreenchimentoDosCampos,
     verificarExistenciaDeCategoria,
     verificarEscritaDoCampoTipo,
@@ -40,24 +58,20 @@ rotas.post('/transacao',
 );
 
 rotas.get('/transacao',
-    verificarUsuarioLogado,
     listarTransacoes
-);
+)
 
 rotas.get('/transacao/extrato',
-    verificarUsuarioLogado,
     obterExtrato
 );
 
 rotas.get('/transacao/:id',
-    verificarUsuarioLogado,
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     detalharTransacao
 );
 
 rotas.put('/transacao/:id',
-    verificarUsuarioLogado,
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     verificarPreenchimentoDosCampos,
@@ -67,7 +81,6 @@ rotas.put('/transacao/:id',
 );
 
 rotas.delete('/transacao/:id',
-    verificarUsuarioLogado,
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     excluirTransacao
