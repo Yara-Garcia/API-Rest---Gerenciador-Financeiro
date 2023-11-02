@@ -1,6 +1,4 @@
 const pool = require('../conexao');
-const listarCategorias = require('./categorias');
-const categorias = require('./categorias');
 
 const cadastrarTransacao = async (req, res) => {
     const { tipo, descricao, valor, data, categoria_id } = req.body
@@ -40,7 +38,6 @@ const listarTransacoes = async (req, res) => {
             from transacoes t join categorias c on t.categoria_id = c.id
             where t.usuario_id = $1`, [id])
 
-            console.log(query.rows)
             return res.status(200).json(query.rows)
         }
 
@@ -62,7 +59,6 @@ const listarTransacoes = async (req, res) => {
                     from transacoes t join categorias c 
                     on t.categoria_id = c.id
                     where t.usuario_id = $1 and c.descricao ilike $2`, [id, categoriaDoFiltroMinusculo])
-                    console.log(queryFiltro)
 
                     transacoesFiltradas.push(...queryFiltro.rows)
                 }
