@@ -72,7 +72,6 @@ rotas.get('/transacao/:id',
 );
 
 rotas.put('/transacao/:id',
-    verificarUsuarioLogado,
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     verificarPreenchimentoDosCampos,
@@ -82,7 +81,6 @@ rotas.put('/transacao/:id',
 );
 
 rotas.delete('/transacao/:id',
-    verificarUsuarioLogado,
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     excluirTransacao

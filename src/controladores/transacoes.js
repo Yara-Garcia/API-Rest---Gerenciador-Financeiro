@@ -1,4 +1,6 @@
 const pool = require('../conexao');
+const listarCategorias = require('./categorias');
+const categorias = require('./categorias');
 
 const cadastrarTransacao = async (req, res) => {
     const { tipo, descricao, valor, data, categoria_id } = req.body
@@ -15,8 +17,8 @@ const cadastrarTransacao = async (req, res) => {
         const { rows } = await pool.query(
             `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
         c.descricao as categoria_nome
-        from transacoes t join categorias c ON t.categoria_id = c.id
-        WHERE t.usuario_id = $1 AND t.id = $2`, [id, idTransacaoCriada])
+        from transacoes t join categorias c on t.categoria_id = c.id
+        where t.usuario_id = $1 and t.id = $2`, [id, idTransacaoCriada])
 
         return res.status(201).json(rows)
 
@@ -29,15 +31,45 @@ const cadastrarTransacao = async (req, res) => {
 const listarTransacoes = async (req, res) => {
     try {
         const { id } = req.usuario
+        const { filtro } = req.query
 
-        const { rows } = await pool.query(
-            `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
-        c.descricao as categoria_nome
-        from transacoes t join categorias c ON t.categoria_id = c.id
-        WHERE t.usuario_id = $1`, [id])
+        if (!filtro) {
+            const query = await pool.query(
+                `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
+            c.descricao as categoria_nome
+            from transacoes t join categorias c on t.categoria_id = c.id
+            where t.usuario_id = $1`, [id])
 
-        return res.status(200).json(rows)
+            console.log(query.rows)
+            return res.status(200).json(query.rows)
+        }
 
+        const transacoesFiltradas = []
+        const categoriasQuery = await pool.query('select * from categorias');
+        const listaCategorias = categoriasQuery.rows
+
+        for (let i = 0; i < filtro.length; i++) {
+
+            const categoriaDoFiltro = filtro[i];
+            const categoriaDoFiltroMinusculo = categoriaDoFiltro.toLowerCase()
+
+            for (let categoria of listaCategorias) {
+
+                if (categoria.descricao.toLowerCase() === categoriaDoFiltroMinusculo) {
+                    const queryFiltro = await pool.query(
+                        `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
+                    c.descricao as categoria_nome
+                    from transacoes t join categorias c 
+                    on t.categoria_id = c.id
+                    where t.usuario_id = $1 and c.descricao ilike $2`, [id, categoriaDoFiltroMinusculo])
+                    console.log(queryFiltro)
+
+                    transacoesFiltradas.push(...queryFiltro.rows)
+                }
+            }
+        }
+
+        return res.status(200).json(transacoesFiltradas)
     } catch (error) {
         console.log(error.message)
         return res.status(500).json('Erro interno do servidor')
@@ -54,10 +86,10 @@ const detalharTransacao = async (req, res) => {
         const { rows } = await pool.query(
             `select t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id,
         c.descricao as categoria_nome
-        from transacoes t join categorias c ON t.categoria_id = c.id
-        WHERE t.usuario_id = $1 and t.id = $2`, [id_usuario, id])
+        from transacoes t join categorias c on t.categoria_id = c.id
+        where t.usuario_id = $1 and t.id = $2`, [id_usuario, id])
 
-        return res.status(200).json(rows)
+        return res.status(200).json(rows[0])
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
@@ -107,7 +139,7 @@ const atualizarTransacao = async (req, res) => {
         tipo = $5
         where id = $6`, [descricao, valor, data, categoria_id, tipo, id]);
 
-        return res.status(204).json()
+        return res.status(204).json(resultado)
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
@@ -118,18 +150,9 @@ const excluirTransacao = async (req, res) => {
     const { id } = req.params
 
     try {
-        const id_usuario = req.usuario.id
-
-        const transacaoExiste = await pool.query(`select * from transacoes
-        where id = $1 and usuario_id = $2`, [id, id_usuario]);
-
-        if (transacaoExiste.rowCount == 0) {
-            return res.status(400).json({ mensagem: 'Transacao inexistente!' })
-        }
-
         const resultado = await pool.query('delete from transacoes where id = $1', [id])
 
-        return res.status(204).json()
+        return res.status(204).json(resultado)
 
     } catch (error) {
         return res.status(500).json('Erro interno do servidor')
