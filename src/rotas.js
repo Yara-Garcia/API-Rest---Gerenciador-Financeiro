@@ -50,16 +50,9 @@ rotas.put('/usuario',
 
 rotas.get('/categoria', listarCategorias);
 
-rotas.post('/transacao',
-    verificarPreenchimentoDosCampos,
-    verificarExistenciaDeCategoria,
-    verificarEscritaDoCampoTipo,
-    cadastrarTransacao
-);
-
 rotas.get('/transacao',
     listarTransacoes
-)
+);
 
 rotas.get('/transacao/extrato',
     obterExtrato
@@ -69,6 +62,13 @@ rotas.get('/transacao/:id',
     verificarExistenciaDeTransacao,
     verificarVinculoDaTransacaoComUsuario,
     detalharTransacao
+);
+
+rotas.post('/transacao',
+    verificarPreenchimentoDosCampos,
+    verificarExistenciaDeCategoria,
+    verificarEscritaDoCampoTipo,
+    cadastrarTransacao
 );
 
 rotas.put('/transacao/:id',
