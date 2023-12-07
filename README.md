@@ -4,7 +4,6 @@
 
 <p> 👩🏽‍💻✨Este projeto foi realizado em parceria com Tais Costa <a href = "https://github.com/taiscostaeng"> Acesse seu perfil </a> </p>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <h2> Funcionalidades do Projeto </h2>
 Esse projeto foi desenvolvido para executar as funções básicas de um sistema de gerenciamento financeiro:
 <ol>
@@ -20,7 +19,6 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
   <li> Atualizar Transação </li>
   <li> Excluir Transação </li>
 </ol>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Tecnologias Utilizadas
 
@@ -30,7 +28,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 ![insomnia](https://img.shields.io/badge/Insomnia-5849be?style=for-the-badge&logo=Insomnia&logoColor=white)
 ![postgresql](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 01: Cadastrar um Usuário </h2>
 <div>
   <h3> POST /usuario </h3>
@@ -44,7 +42,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Não é possível a criação de um novo usuário com o mesmo e-mail de usuário anteriormente cadastrado no sistema de banco de dados; </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 02: Realizar Login </h2>
 <div>
   <h3> POST /login </h3>
@@ -58,7 +56,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Com o acesso do usuário ao sistema, é gerado um token de acesso. Este token é utilizado como req.headers para validação de acesso; </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 03: Detalhar usuário </h2>
 <div>
   <h3> GET /usuario </h3>
@@ -72,7 +70,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Token utilizado como req.headers para validação de acesso; </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 04: Atualizar usuário </h2>
 <div>
   <h3> PUT /usuario </h3>
@@ -86,7 +84,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Token utilizado como req.headers para validação de acesso. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 05: Listar categorias </h2>
 <div>
   <h3> GET /categoria </h3>
@@ -99,7 +97,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Token utilizado como req.headers para validação de acesso. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 06: Cadastrar transação </h2>
 <div>
   <h3> POST /transacao </h3>
@@ -115,7 +113,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Token utilizado como req.headers para validação de acesso. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 07: Listar transações </h2>
 <div>
     <h3> GET /transacao </h3>
@@ -128,7 +126,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Token utilizado como req.headers para validação de acesso. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 08: Detalhar transação </h2>
 <div>
   <h3> GET /transacao/:id </h3>
@@ -142,7 +140,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Não permite o acesso a outras transações financeiras que não sejam do usuário logado; </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 09: Obter Extrato </h2>
 <div>
   <h3> GET /transacao/extrato </h3>
@@ -154,7 +152,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Exibe o extrato das transações financeiras o usuário (entradas e saidas); </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 10: Atualizar Transação </h2>
 <div>
   <h3> PUT /transacao/:id </h3>
@@ -171,7 +169,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Atualiza uma transação financeira do usuário. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Rota 11: Excluir Transação </h2>
 <div>
   <h3> DELETE /transacao/:id </h3>
@@ -185,7 +183,7 @@ Esse projeto foi desenvolvido para executar as funções básicas de um sistema 
 <li> Exclui a transação financeira. </li>
 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 ## Como Usar
 
 Para começar a usar a API, siga as seguintes etapas:
@@ -207,7 +205,7 @@ npm run start
 
 A API estará disponível em http://localhost:3000. Você pode acessar os endpoints da API (GET, POST, PUT e DELETE) para listar, criar, atualizar e deletar contas através do aplicativo Insomnia.
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 <h2> Você quer contribuir com esse projeto? </h2>
 <li> 1. Realize o clone desse projeto; </li>
 <li> 2. Acesse o proeto no terminal cd sistema-gerenciador-financeiro-api-rest; </li>
