@@ -1,32 +1,37 @@
 <h1> API REST - Gerenciador Financeiro 📊💰 </h1>
 
-<p> Esse repositório demonstra os códigos desenvolvidos para finalização do Modulo 03 do curso de Desenvolvimento Back-End pela instituição Cubos Academy. Fomos desafiadas pela Cubos Academy a desenvolver um sistema de gerenciamento financeiro API REST com persistência de dados, criptogragia de senha e geração de token para os usuários logados no sistema 🤯🎯 </p>
-<p>
-<li> Desenvolvemos 11 rotas que buscam realizar operações básicas de um gerenciador financeiro; </li>
-<li> Criamos três controladores (transações, categorias e usuários) para armazenamento dos códigos das rotas criadas. </li> 
-<li> Criamos sete intermediários para a proteção das rotas criadas. </li> 
-<li> As rotas possuem como tipo de resquisição req.body, req.params, req.headers e/ou req.params; </li>
-<li> Todas rotas possuem a exibição de um status code adequado a resposta da requisição, seja do tipo bem-sucedida ou mal-sucedida; </li>
-</p>
+<p> Esse repositório demonstra os códigos desenvolvidos para finalização do Módulo 03 do curso de Desenvolvimento Back-End pela instituição Cubos Academy. Fomos desafiadas a desenvolver um sistema de gerenciamento financeiro API REST com persistência de dados, criptogragia de senha e geração de token para os usuários logados no sistema. </p>
+
 <p> 👩🏽‍💻✨Este projeto foi realizado em parceria com Tais Costa <a href = "https://github.com/taiscostaeng"> Acesse seu perfil </a> </p>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> 👩🏽‍🔧 Linguagens e Ferramentas </h2>
-<li> JAVASCRIPT </li>
-<li> NODEJS </li>
-<li> PROTOCOLO HTTP </li>
-<li> JSON </li>
-<li> BIBLIOTECAS NODEMON E EXPRESS </li>
-<li> BIBLIOTECA NODE-POSTGRES </li>
-<li> BIBLIOTECA BCRYPT </li>
-<li> BIBLIOTECA JWT </li>
-<li> PostgreSQL e BEEKEEPER </li>
-<li> INSOMNIA </li>
-<li> VSCODE </li>
-<li> GIT </li>
+<h2> Funcionalidades do Projeto </h2>
+Esse projeto foi desenvolvido para executar as funções básicas de um sistema de gerenciamento financeiro:
+<ol>
+  <li> Cadastrar Usuário </li>
+  <li> Realizar Login </li>
+  <li> Detalhar Usuário </li>
+  <li> Atualizar Usuário </li>
+  <li> Listar Categorias </li>
+  <li> Cadastrar Transação </li>
+  <li> Listar Transações </li>
+  <li> Detalhar Transação </li>
+  <li> Obter Extrato </li>
+  <li> Atualizar Transação </li>
+  <li> Excluir Transação </li>
+</ol>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Tecnologias Utilizadas
+
+![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![NodeJs](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![express](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+![insomnia](https://img.shields.io/badge/Insomnia-5849be?style=for-the-badge&logo=Insomnia&logoColor=white)
+![postgresql](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 01: Cadastrar um Usuário 👵🏽🧔🏽 </h2>
+<h2> Rota 01: Cadastrar um Usuário </h2>
 <div>
   <h3> POST /usuario </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/a9d538e9-13a8-4494-90b0-d492ee550d41">
@@ -40,7 +45,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 02: Realizar Login ✅👨🏽‍💻 </h2>
+<h2> Rota 02: Realizar Login </h2>
 <div>
   <h3> POST /login </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/3c6d78d2-f343-499f-ae81-171c0bde17b4">
@@ -54,7 +59,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 03: Detalhar usuário 🕵🏽‍♀️🧾 </h2>
+<h2> Rota 03: Detalhar usuário </h2>
 <div>
   <h3> GET /usuario </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/f0135d5e-dc88-4c39-ade2-f9de4d0482ef">
@@ -68,7 +73,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 04: Atualizar usuário ✅🔄 </h2>
+<h2> Rota 04: Atualizar usuário </h2>
 <div>
   <h3> PUT /usuario </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/c3a6e859-feca-4ba9-b929-4d2673e8fcbb">
@@ -82,7 +87,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 05: Listar categorias 🛒🍔 </h2>
+<h2> Rota 05: Listar categorias </h2>
 <div>
   <h3> GET /categoria </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/eb454e99-481e-4353-848e-f7945f122ea8">
@@ -95,7 +100,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 06: Cadastrar transação ✅🤑 </h2>
+<h2> Rota 06: Cadastrar transação </h2>
 <div>
   <h3> POST /transacao </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/aeea8025-7e62-4ca9-8d35-f1d797b6b970">
@@ -111,7 +116,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 07: Listar transações ✅🧾 </h2>
+<h2> Rota 07: Listar transações </h2>
 <div>
     <h3> GET /transacao </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/cfbd0d30-f4a7-45a4-91bf-b403cd91c897">
@@ -124,7 +129,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 08: Detalhar transação 🕵🏽‍♀️🧾 </h2>
+<h2> Rota 08: Detalhar transação </h2>
 <div>
   <h3> GET /transacao/:id </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/436610cb-7faa-4661-a0a9-550d8799bb47">
@@ -138,7 +143,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 09: Obter Extrato 🤑💲 </h2>
+<h2> Rota 09: Obter Extrato </h2>
 <div>
   <h3> GET /transacao/extrato </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/d0c8db7b-dbff-47be-aa94-5bf545647d32">
@@ -150,7 +155,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 10: Atualizar Transação 🔄💰 </h2>
+<h2> Rota 10: Atualizar Transação </h2>
 <div>
   <h3> PUT /transacao/:id </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/04ba8f15-1aae-47dc-99df-dd38e8d8cf00">
@@ -167,7 +172,7 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> Rota 11: Excluir Transação 🗑💰 </h2>
+<h2> Rota 11: Excluir Transação </h2>
 <div>
   <h3> DELETE /transacao/:id </h3>
   <img src = "https://github.com/taiscostaeng/sistema-gerenciador-financeiro-api-rest/assets/138815703/448fd394-a3e8-48ee-9bf0-2788f8cbb4d2">
@@ -181,35 +186,34 @@
 </div>
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> ✨👩🏽‍💻 Como realizar a execução desse projeto? </h2>
-<li> Primeiro, você precisa realizar o clone desse projeto; </li>
-<li> Em seguida, você deve acessar a do projeto no terminal cd sistema-gerenciador-financeiro-api-rest </li>
-<li> Instale as bibliotecas necessárias utilizando o comando npm i </li>
-<li> Execute a aplicação em modo de desenvolvimento npm run dev </li>
-<li> O servidor iniciará na porta 3000 - acesse http://localhost:3000 </li>
+## Como Usar
+
+Para começar a usar a API, siga as seguintes etapas:
+
+1. Faça o fork desse repositório para o seu GitHub
+
+2. Clone o seu repositório em sua máquina
+
+3. Instale as dependências do projeto através do comando:
+
+```bash
+npm i
+```
+4. Execute o projeto com o seguinte comando:
+
+```bash
+npm run start
+```
+
+A API estará disponível em http://localhost:3000. Você pode acessar os endpoints da API (GET, POST, PUT e DELETE) para listar, criar, atualizar e deletar contas através do aplicativo Insomnia.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> ✨😊 Você quer contribuir com esse projeto? </h2>
-<li> Primeiro, você precisa realizar o clone desse projeto; </li>
-<li> Em seguida, você deve acessar a do projeto no terminal cd sistema-gerenciador-financeiro-api-rest </li>
-<li> Instale as bibliotecas necessárias utilizando o comando npm i </li>
-<li> Execute a aplicação em modo de desenvolvimento npm run dev </li>
-<li> Depois, você pode realizar as alterações no código; </li>
-<li> Por fim, você precisa realizar o Pull Request (PR) para esse repositório; </li>
+<h2> Você quer contribuir com esse projeto? </h2>
+<li> 1. Realize o clone desse projeto; </li>
+<li> 2. Acesse o proeto no terminal cd sistema-gerenciador-financeiro-api-rest; </li>
+<li> 3. Instale as dependências do projeto utilizando o comando npm i; </li>
+<li> 4. Execute a aplicação em modo de desenvolvimento npm run dev; </li>
+<li> 5. Realize as alterações no código; </li>
+<li> 6. Realize o Pull Request (PR) para esse repositório; </li>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h2> 🎖🏆 Funcionalidades do Projeto </h2>
-Esse projeto foi desenvolvido para executar as funções básicas de um sistema de gerenciamento financeiro:
-<ol>
-  <li> Cadastrar Usuário </li>
-  <li> Realizar Login </li>
-  <li> Detalhar Usuário </li>
-  <li> Atualizar Usuário </li>
-  <li> Listar Categorias </li>
-  <li> Cadastrar Transação </li>
-  <li> Listar Transações </li>
-  <li> Detalhar Transação </li>
-  <li> Obter Extrato </li>
-  <li> Atualizar Transação </li>
-  <li> Excluir Transação </li>
-</ol>
+
